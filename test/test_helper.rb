@@ -13,6 +13,16 @@ require 'mocha/minitest'
 require 'sidekiq'
 require 'sidekiq/web'
 require "sidekiq/cli"
+
+Sidekiq.logger.level = Logger::ERROR
+
+redis_url = ENV['REDIS_URL'] || 'redis://0.0.0.0:6379'
+REDIS = Sidekiq::RedisConnection.create(:url => redis_url)
+
+Sidekiq.configure_client do |config|
+  config.redis = { :url => redis_url }
+end
+
 require 'sidekiq-cron'
 require 'sidekiq/cron/web'
 
